@@ -9,4 +9,4 @@ At this point, assume that data is "linear" enough that we can just naively fit 
 
 So, first we want to summarize the data down into the linear function that we can then use the traditional variable selection method like LASSO or something to reduce the dimension on the coefficient down. Then, we generate the random points (constraints by the domain of the features), use that as our new dimensional reduced data, and see what will go wrong.
 
-This idea can expand by using more sophisicated method. 
+This idea is somewhat similar to PCA, as far as I understand. In this method, we try to project the data into a lower dimensional space, but instead of using the orthogonal projection, we use the projection from the regression model. More like, projecting into the arbitrary manifold that related to the predictors and dependent variables than aims to maximize the variance regardless of the dependent variable.
