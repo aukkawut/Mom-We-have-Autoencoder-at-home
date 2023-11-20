@@ -8,7 +8,7 @@ from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
 
 # Load data from openml
-mnist = fetch_openml('mnist_784')
+mnist = fetch_openml('mnist_784', parser = 'auto', cache=True)
 X = mnist.data
 y = mnist.target
 
