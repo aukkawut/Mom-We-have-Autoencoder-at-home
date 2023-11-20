@@ -1,12 +1,6 @@
 # Silly Dimensional Reduction
-This is repo for Silly Dimensional Reduction where we just perform regression on the data, select the most prominent features, and then randomly generate the data from the pruned regression model. Use that with other algorithms and see what happens.
+This is repo for Silly Dimensional Reduction where we use PCA to reduce the dimension of the data, then later on use the multiple multivariate linear regression to recreate the initial image like what Autoencoder do.
 
-## Assumption
+## Rationale
 
-At this point, assume that data is "linear" enough that we can just naively fit $$\mathbf{Y} = \mathbf{X}\boldsymbol{\beta} + \boldsymbol{\epsilon}$$ or have like $r^2 > 0.8$ or something like that. 
-
-## Idea
-
-So, first we want to summarize the data down into the linear function that we can then use the traditional variable selection method like LASSO or something to reduce the dimension on the coefficient down. Then, we generate the random points (constraints by the domain of the features), use that as our new dimensional reduced data, and see what will go wrong.
-
-This idea is somewhat similar to PCA, as far as I understand. In this method, we try to project the data into a lower dimensional space, but instead of using the orthogonal projection, we use the projection from the regression model. More like, projecting into the arbitrary manifold that related to the predictors and dependent variables than aims to maximize the variance regardless of the dependent variable.
+~~I hate when people say autoencoder is a neural network.~~ Given the data $x \in \mathbb{R}^{m}$, we can potentially summarize that data down into an embedding $q \in \mathbb{R}^{k}$ for $k << m$. This is essentially an encoder part of an autoencoder. Now, we just need the decoder part. The naive model to do this is a regression model $f:\mathbb{R}^{k} \rightarrow \mathbb{R}^m$.
