@@ -1,60 +1,89 @@
-#This is autoencoder from PCA and Linear regression
 import numpy as np
+from sklearn.decomposition import PCA
+from sklearn.linear_model import LinearRegression
 import matplotlib.pyplot as plt
 from sklearn.datasets import fetch_openml
-from sklearn.linear_model import LinearRegression, ElasticNet,ARDRegression, Lasso, Ridge
-from sklearn.kernel_ridge import KernelRidge
-from sklearn.decomposition import PCA
 from sklearn.model_selection import train_test_split
+from sklearn.metrics import mean_squared_error
 
-# Load data from openml
-mnist = fetch_openml('mnist_784', parser = 'auto', cache=True)
-X = mnist.data
-y = mnist.target
+# Load MNIST data
+mnist = fetch_openml('mnist_784', parser='auto', cache = True)
+X, y = mnist.data / 255.0, mnist.target.astype(int)
 
-# Split data into train and test
-X_train, X_test, _, _ = train_test_split(X, y, test_size=0.1, random_state=42)
+# Flatten images
+X_flat = X.values
 
-# PCA
-pca = PCA(n_components=32)
-pca.fit(X_train)
-X_train_pca = pca.transform(X_train)
+# Split data into training and testing sets
+X_train, X_test, _, _ = train_test_split(X_flat, y, test_size=0.2, random_state=42)
+
+# Apply PCA for dimensionality reduction
+pca = PCA(n_components=16)
+X_train_pca = pca.fit_transform(X_train)
 X_test_pca = pca.transform(X_test)
 
-# Linear regression on PCA transformed data to get the reconstruction of the intial MNIST image
-lr = Lasso(alpha=0.3)
-lr.fit(X_train_pca, X_train)
+# Train multivariate linear regression model
+regression_model = LinearRegression()
+regression_model.fit(X_train_pca, X_train)
 
-# Randomly pick 10 from test set to show the initial image, PCA transformed image and the reconstructed image
-initial_image = X_test.sample(n=10, random_state=42)
-initial_image = np.array(initial_image)
-pca_image = pca.transform(initial_image)
-reconstructed_image = lr.predict(pca_image)
+# Reconstruct images
+reconstructed_images = regression_model.predict(X_test_pca)
 
-# Plot the images
-plt.figure(figsize=(20, 4))
-for i in range(10):
-    # initial image
-    ax = plt.subplot(3, 20, i+1)
-    plt.imshow(initial_image[i].reshape(28, 28))
-    plt.gray()
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-    
-    # PCA transformed image
-    ax = plt.subplot(3, 20, i+1+20)
-    plt.imshow(pca_image[i].reshape(4, 8))
-    plt.gray()
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-    
-    # Reconstructed image
-    ax = plt.subplot(3, 20, i+1+40)
-    plt.imshow(reconstructed_image[i].reshape(28, 28))
-    plt.gray()
-    ax.get_xaxis().set_visible(False)
-    ax.get_yaxis().set_visible(False)
-plt.tight_layout()
+# Calculate reconstruction error
+mse = mean_squared_error(X_test, reconstructed_images)
+print(f"Mean Squared Error: {mse}")
+
+# Visualize original and reconstructed images
+n_samples = 5
+plt.figure(figsize=(10, 4))
+for i in range(n_samples):
+    plt.subplot(2, n_samples, i + 1)
+    plt.imshow(X_test[i].reshape(28, 28), cmap='gray')
+    plt.title("Original")
+    plt.axis('off')
+
+    plt.subplot(2, n_samples, i + 1 + n_samples)
+    plt.imshow(reconstructed_images[i].reshape(28, 28), cmap='gray')
+    plt.title("Reconstructed")
+    plt.axis('off')
+
 plt.show()
+# Select a baseline image index
+baseline_index = 0
 
+# Get the latent vector for the baseline image
+baseline_latent_vector = X_train_pca[baseline_index]
 
+# Select two random dimensions to perturb
+perturb_dimensions = np.random.choice(range(baseline_latent_vector.shape[0]), size=2, replace=False)
+
+# Generate images by perturbing the selected dimensions
+n_steps = 10
+perturbation_values = np.linspace(-3, 3, n_steps)
+generated_images = np.zeros((n_steps, n_steps, X_train.shape[1]))
+
+for i, perturb_val1 in enumerate(perturbation_values):
+    for j, perturb_val2 in enumerate(perturbation_values):
+        perturbed_latent_vector = baseline_latent_vector.copy()
+        perturbed_latent_vector[perturb_dimensions[0]] += perturb_val1
+        perturbed_latent_vector[perturb_dimensions[1]] += perturb_val2
+        generated_images[i, j] = regression_model.predict(perturbed_latent_vector.reshape(1, -1))
+
+# Plot the results
+plt.figure(figsize=(12, 12))
+
+# Baseline Image
+plt.subplot(n_steps, n_steps, 1)
+plt.imshow(X_train[baseline_index].reshape(28, 28), cmap='gray')
+plt.title("Baseline Image")
+plt.axis('off')
+
+# Generated Images by Perturbing Dimensions
+for i in range(n_steps):
+    for j in range(n_steps):
+        plt.subplot(n_steps, n_steps, i * n_steps + j + 1)
+        plt.imshow(generated_images[i, j].reshape(28, 28), cmap='gray')
+        plt.title(f"Perturb {perturb_dimensions[0]}: {perturbation_values[i]:.2f}\n"
+                  f"Perturb {perturb_dimensions[1]}: {perturbation_values[j]:.2f}")
+        plt.axis('off')
+
+plt.show()
