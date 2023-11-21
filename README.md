@@ -7,7 +7,7 @@ This is repo for Silly Dimensional Reduction where we use PCA to reduce the dime
 
 ## Result
 
-Here is an empirical result, the MSE is around 0.01 on the linear regression model so it is quite working well.
+Here is an empirical result, the MSE is around 0.01 on 25% test set of the linear regression model so it is quite working well.
 
 ![LinearModel](/result/linearencoder.png)
 
