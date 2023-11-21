@@ -1,4 +1,4 @@
-# Silly Dimensional Reduction
+# Mom: We have Autoencoder at home
 This is repo for Silly Dimensional Reduction where we use PCA to reduce the dimension of the data, then later on use the multiple multivariate linear regression to recreate the initial image like what Autoencoder do.
 
 ## Rationale
