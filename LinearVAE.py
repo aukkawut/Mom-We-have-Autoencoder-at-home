@@ -66,3 +66,33 @@ with open('coef.pkl', 'wb') as f:
     pickle.dump(coef, f)
 with open('inte.pkl', 'wb') as f:
     pickle.dump(inte, f)
+    
+def thresholding(data_array,threshold = 1e-2):
+  # Apply one-sided thresholding
+  thresholded_data = np.where(data_array < threshold, 0, 1.2*data_array)
+  thresholded_data_rescaled = (thresholded_data - np.min(thresholded_data)) / (np.max(thresholded_data) - np.min(thresholded_data))
+
+  return thresholded_data_rescaled
+def interpolate_and_generate_ppca(coefficients, intercept, start_point, end_point, n_samples=10, k=9):
+    interpolated_points = interpolate_points(start_point, end_point, n_samples)
+    generated_images = []
+    for point in interpolated_points:
+        Z_new = point.reshape(1, k)
+        X_new = np.matmul(Z_new, coefficients.values) + intercept.values
+        X_new_unscaled = thresholding(scaler.inverse_transform(X_new), 4e-3)  # Assuming 'scaler' is your StandardScaler instance
+        generated_images.append(X_new_unscaled.squeeze())
+    return generated_images
+
+def interpolate_points(p1, p2, n_steps=10):
+    return np.linspace(p1, p2, num=n_steps)
+
+
+coefficients_0 = coef[0]  # Coefficients for digit 0
+intercept_0 = inte[0]    # Intercept for digit 0
+# Select two points in the latent space for digit 0
+start_point = np.random.randn(k)  # Random point in latent space
+end_point = np.random.randn(k)    # Another random point
+generated_images = interpolate_and_generate_ppca(coefficients_0, intercept_0, start_point, end_point, n_samples=10, k=k)
+
+# Visualize the results
+plot_images(generated_images, rows=1, cols=len(generated_images), title="Latent Space Interpolation of LDA and MMLR for Label 6")
