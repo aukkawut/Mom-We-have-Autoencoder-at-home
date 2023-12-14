@@ -12,3 +12,7 @@ Here is an empirical result, the MSE is around 0.01 on 25% test set of the linea
 ![LinearModel](/result/linearencoder.png)
 
 ![KernelModel](/result/rbfkernelencoder.png)
+
+## I'm not done yet.
+
+well, I implemented the variational version (which is kinda equivalent to VAE). Will write something about that soon. hopefully.
