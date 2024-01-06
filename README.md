@@ -17,6 +17,6 @@ More result (including mathematical derivation and more result) can be viewed on
 
 ### MCMC (NUTS)
 
-Here, the result of MCMC is denoted by NUTS and the VI method is denoted by ADVI.
+Here, the result of MCMC is denoted by NUTS and the VI method is denoted by ADVI. It does not look that nice compared to the [slide](./Autoencoder_Presentation.pdf) result as those in the slide is passed through the thresholding function.
 
 ![MCMC](/result/exp6.png)
