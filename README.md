@@ -1,5 +1,5 @@
 # Mom: We have Autoencoder at home
-This is repo for Silly Dimensional Reduction where we use PCA to reduce the dimension of the data, then later on use the multiple multivariate linear regression to recreate the initial image like what Autoencoder do.
+This is repo for Silly Dimensional Reduction where we use PCA to reduce the dimension of the data, then later on use the multiple multivariate linear regression to recreate the initial image like what Autoencoder do. This is a class project for MA 554 Applied Multivariate Analysis at WPI I did in a span of a week (so, it is not well-refined nor that deep in terms of mathematics).
 
 ## Rationale
 
@@ -13,6 +13,4 @@ Here is an empirical result, the MSE is around 0.01 on 25% test set of the linea
 
 ![KernelModel](/result/rbfkernelencoder.png)
 
-## I'm not done yet.
-
-well, I implemented the variational version (which is kinda equivalent to VAE). Will write something about that soon. hopefully.
+More result (including mathematical derivation and more result) can be viewed on [my slide](Autoencoder_Presentation.pdf).
