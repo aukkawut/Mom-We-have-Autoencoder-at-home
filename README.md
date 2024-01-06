@@ -14,3 +14,9 @@ Here is an empirical result, the MSE is around 0.01 on 25% test set of the linea
 ![KernelModel](/result/rbfkernelencoder.png)
 
 More result (including mathematical derivation and more result) can be viewed on [my slide](./Autoencoder_Presentation.pdf). Here, only VI is explored because (from my perspective) ML community usually try the fast to implement and computationally less expensive option. However, I also try the MCMC method (as this is Bayesian linear regression afterall) and got the similar result.  
+
+### MCMC (NUTS)
+
+Here, the result of MCMC is denoted by NUTS and the VI method is denoted by ADVI.
+
+![MCMC](/result/exp6.png)
